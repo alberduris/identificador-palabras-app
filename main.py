@@ -9,6 +9,7 @@ from langchain.output_parsers import PydanticOutputParser, OutputFixingParser
 from langchain.prompts import PromptTemplate
 from pydantic import BaseModel
 
+
 # Get the API key from .env and set it 
 openai.api_key = st.secrets['OPENAI_API_KEY']
 
