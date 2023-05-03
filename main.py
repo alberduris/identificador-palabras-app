@@ -68,11 +68,11 @@ def identificarPalabras(palabras: str):
 
             # Prepare prompt
             user_prompt = PromptTemplate(
-                template="""Palabra: '{translation} ({synonyms})'. TextoDescriptivo: '{texto_descriptivo}'.
+                template="""Palabra: '{translation}{synonyms}'. TextoDescriptivo: '{texto_descriptivo}'.
                 ## CONTEXTO ##
-                ¿Está la palabra '{translation} ({synonyms})' relacionada con alguna de las palabras o conceptos de '{texto_descriptivo}'?
-                ¿Describe '{translation} ({synonyms})' de alguna manera '{texto_descriptivo}'?
-                ¿Es '{translation} ({synonyms})' algo relacionado con '{texto_descriptivo}'?
+                ¿Está la palabra '{translation}{synonyms}' relacionada con alguna de las palabras o conceptos de '{texto_descriptivo}'?
+                ¿Describe '{translation}{synonyms}' de alguna manera '{texto_descriptivo}'?
+                ¿Es '{translation}{synonyms}' algo relacionado con '{texto_descriptivo}'?
                 ##############
 
                 Instrucción: Si la respuesta es sí para alguna de las anteriores preguntas, responde "true". Si la respuesta es no para todas las anteriores preguntas, responde "false".
@@ -80,8 +80,13 @@ def identificarPalabras(palabras: str):
                 input_variables=["translation",
                                  "synonyms", "texto_descriptivo"],
             )
+            if len(translationSynonyms['sinonimos_palabra']) > 0:
+                synonyms = ", ".join(translationSynonyms['sinonimos_palabra'])
+                synonyms = f" ({synonyms})"
+            else:
+                synonyms = ""
             user_input = user_prompt.format_prompt(translation=translationSynonyms['traduccion_palabra'],
-                                                   synonyms=", ".join(translationSynonyms['sinonimos_palabra']), texto_descriptivo=texto_descriptivo)
+                                                   synonyms=synonyms, texto_descriptivo=texto_descriptivo)
 
             # Call openai chat endpoint
             response = getStructuredResponse(sys_input, user_input, parser)
@@ -115,7 +120,9 @@ def getTranslationSynonyms(palabra: str, texto_descriptivo: str) -> TranslationS
 
         Instrucción: Si el idioma del Texto Descriptivo y la Palabra es el mismo, no es necesario traducir la Palabra, simplemente escribe la Palabra original tanto en el campo "palabra" como en el campo "traduccion_palabra".
         Instrucción: No generes ninguna explicación. 
-
+        Instrucción: Si las Palabra son siglas, acrónimos, marcas o nombres propios, no es necesario traducirlas. Simplemente escribe la Palabra original tanto en el campo "palabra" como en el campo "traduccion_palabra". 
+        Instrucción: Si no es posible traducir la Palabra (e.g., siglas, acrónimos, marcas o nombres propios), escribe la Palabra original tanto en el campo "palabra" como en el campo "traduccion_palabra".
+        Instrucción: Si no se pueden generar sinónimos de la Palabra (e.g., siglas, acrónimos, marcas o nombres propios), devuelve un array vacío en el campo "sinonimos_palabra".
         Tarea: Responde únicamente con un JSON válido siguiendo el OUTPUT SCHEMA.
         """,
         input_variables=[],
