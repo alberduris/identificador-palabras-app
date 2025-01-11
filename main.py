@@ -116,7 +116,7 @@ def getTranslationSynonyms(palabra: str, texto_descriptivo: str) -> TranslationS
         Tarea 1: Identifica el idioma en el que está escrito el Texto Descriptivo.
         Tarea 2: Identifica el idioma en el que está escrita la Palabra.
         Tarea 3: Si Palabra está en distinto idioma que el Texto Descriptivo, traduce Palabra al IdiomaDestino. Si están en el mismo idioma, no traduzcas nada. Escribe la Palabra original. 
-        Tarea 3: Genera entre 3 y 5 sinónimos de Palabra en IdiomaDestino.
+        Tarea 4: Genera entre 3 y 5 sinónimos de Palabra en IdiomaDestino.
 
         Instrucción: Si el idioma del Texto Descriptivo y la Palabra es el mismo, no es necesario traducir la Palabra, simplemente escribe la Palabra original tanto en el campo "palabra" como en el campo "traduccion_palabra".
         Instrucción: No generes ninguna explicación. 
